@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto"
+    package="com.unity3d.player.UnityPlayerActivity">
+
+    <!-- have full network access -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- view network connections -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!-- read the contents of your SD card -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- modify or delete the contents of your SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- access approximate location (network-based) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- access precise location (GPS and network-based) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <!-- view Wi-Fi connections -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <!-- read phone status and identity -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <!-- READ_SETTINGS -->
+    <uses-permission android:name="android.permission.READ_SETTINGS"/>
+
+    <!-- prevent phone from sleeping -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application
+        android:name="com.unity3d.player.UnityPlayerActivity.WebViewAppApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.WebViewApp.Teal"
+        android:hardwareAccelerated="true"
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode">
+
+        </activity>
+
+        <activity
+            android:name=".activity.SplashActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.WebViewApp.Splash"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode">
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <category android:name="android.intent.category.APP_BROWSER"/>
+
+            </intent-filter>
+
+        </activity>
+
+    </application>
+
+</manifest>
