@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name" translatable="false">Streaming App</string>
+	<string name="app_name" translatable="false">Play Movie</string>
 	<string name="app_store_uri" translatable="false">https://play.google.com/store/apps/details?id=%1$s</string>
 
-	<string name="navigation_header_title">Streaming App</string>
+	<string name="navigation_header_title">Play Movie</string>
 
 	<string name="global_network_offline">No Internet connection available</string>
 

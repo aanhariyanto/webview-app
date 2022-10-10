@@ -7,35 +7,27 @@ import android.webkit.WebView;
 import java.lang.ref.WeakReference;
 
 
-public class WebViewOnKeyListener implements View.OnKeyListener
-{
+public class WebViewOnKeyListener implements View.OnKeyListener {
 	private WeakReference<DrawerStateListener> mDrawerStateListener;
 
 
-	public WebViewOnKeyListener(DrawerStateListener drawerStateListener)
-	{
+	public WebViewOnKeyListener(DrawerStateListener drawerStateListener) {
 		mDrawerStateListener = new WeakReference<>(drawerStateListener);
 	}
 
 
 	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event)
-	{
-		if(event.getAction() == KeyEvent.ACTION_DOWN)
-		{
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			WebView webView = (WebView) v;
 			DrawerStateListener drawerStateListener = mDrawerStateListener.get();
 
-			if(drawerStateListener != null && keyCode == KeyEvent.KEYCODE_BACK)
-			{
-				if(webView.canGoBack() && !drawerStateListener.isDrawerOpen())
-				{
+			if (drawerStateListener != null && keyCode == KeyEvent.KEYCODE_BACK) {
+				if (webView.canGoBack() && !drawerStateListener.isDrawerOpen()) {
 					// go back in webview
 					webView.goBack();
 					return true;
-				}
-				else
-				{
+				} else {
 					// close drawer or finish
 					drawerStateListener.onBackButtonPressed();
 					return false;

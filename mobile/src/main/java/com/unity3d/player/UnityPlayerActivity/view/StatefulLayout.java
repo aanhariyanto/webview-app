@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class StatefulLayout extends FrameLayout
-{
+public class StatefulLayout extends FrameLayout {
 	private static final String SAVED_STATE = "stateful_layout_state";
 
 	private State mInitialState;
@@ -28,8 +27,7 @@ public class StatefulLayout extends FrameLayout
 	private OnStateChangeListener mOnStateChangeListener;
 
 
-	public enum State
-	{
+	public enum State {
 		CONTENT(0), PROGRESS(1), OFFLINE(2), EMPTY(3);
 
 		private final int mValue;
@@ -55,44 +53,36 @@ public class StatefulLayout extends FrameLayout
 	}
 
 
-	public interface OnStateChangeListener
-	{
+	public interface OnStateChangeListener {
 		void onStateChange(View v, State state);
 	}
 
 
-	public StatefulLayout(Context context)
-	{
+	public StatefulLayout(Context context) {
 		this(context, null);
 	}
 
 
-	public StatefulLayout(Context context, AttributeSet attrs)
-	{
+	public StatefulLayout(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
 
-	public StatefulLayout(Context context, AttributeSet attrs, int defStyleAttr)
-	{
+	public StatefulLayout(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout);
-		if(typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_state))
-		{
+		if (typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_state)) {
 			int initialStateValue = typedArray.getInt(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_state, State.CONTENT.getValue());
 			mInitialState = State.valueToState(initialStateValue);
 		}
-		if(typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_progressLayout) &&
-				typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_offlineLayout) &&
-				typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_emptyLayout))
-		{
+		if (typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_progressLayout) &&
+            typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_offlineLayout) &&
+            typedArray.hasValue(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_emptyLayout)) {
 			mProgressLayoutId = typedArray.getResourceId(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_progressLayout, 0);
 			mOfflineLayoutId = typedArray.getResourceId(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_offlineLayout, 0);
 			mEmptyLayoutId = typedArray.getResourceId(com.unity3d.player.UnityPlayerActivity.R.styleable.StatefulLayout_emptyLayout, 0);
-		}
-		else
-		{
+		} else {
 			throw new IllegalArgumentException("Attributes progressLayout, offlineLayout and emptyLayout are mandatory");
 		}
 		typedArray.recycle();
@@ -100,49 +90,41 @@ public class StatefulLayout extends FrameLayout
 
 
 	@Override
-	protected void onFinishInflate()
-	{
+	protected void onFinishInflate() {
 		super.onFinishInflate();
 		setupView();
 	}
 
 
-	public void showContent()
-	{
+	public void showContent() {
 		setState(State.CONTENT);
 	}
 
 
-	public void showProgress()
-	{
+	public void showProgress() {
 		setState(State.PROGRESS);
 	}
 
 
-	public void showOffline()
-	{
+	public void showOffline() {
 		setState(State.OFFLINE);
 	}
 
 
-	public void showEmpty()
-	{
+	public void showEmpty() {
 		setState(State.EMPTY);
 	}
 
 
-	public State getState()
-	{
+	public State getState() {
 		return mState;
 	}
 
 
-	public void setState(State state)
-	{
+	public void setState(State state) {
 		mState = state;
 
-		for(int i = 0; i < mContentLayoutList.size(); i++)
-		{
+		for (int i = 0; i < mContentLayoutList.size(); i++) {
 			mContentLayoutList.get(i).setVisibility(state == State.CONTENT ? View.VISIBLE : View.GONE);
 		}
 
@@ -150,30 +132,25 @@ public class StatefulLayout extends FrameLayout
 		mOfflineLayout.setVisibility(state == State.OFFLINE ? View.VISIBLE : View.GONE);
 		mEmptyLayout.setVisibility(state == State.EMPTY ? View.VISIBLE : View.GONE);
 
-		if(mOnStateChangeListener != null) mOnStateChangeListener.onStateChange(this, state);
+		if (mOnStateChangeListener != null) mOnStateChangeListener.onStateChange(this, state);
 	}
 
 
-	public void setOnStateChangeListener(OnStateChangeListener l)
-	{
+	public void setOnStateChangeListener(OnStateChangeListener l) {
 		mOnStateChangeListener = l;
 	}
 
 
-	public void saveInstanceState(Bundle outState)
-	{
-		if(mState != null)
-		{
+	public void saveInstanceState(Bundle outState) {
+		if (mState != null) {
 			outState.putInt(SAVED_STATE, mState.getValue());
 		}
 	}
 
 
-	public State restoreInstanceState(Bundle savedInstanceState)
-	{
+	public State restoreInstanceState(Bundle savedInstanceState) {
 		State state = null;
-		if(savedInstanceState != null && savedInstanceState.containsKey(SAVED_STATE))
-		{
+		if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_STATE)) {
 			int value = savedInstanceState.getInt(SAVED_STATE);
 			state = State.valueToState(value);
 			setState(state);
@@ -182,13 +159,10 @@ public class StatefulLayout extends FrameLayout
 	}
 
 
-	private void setupView()
-	{
-		if(mContentLayoutList == null && !isInEditMode())
-		{
+	private void setupView() {
+		if (mContentLayoutList == null && !isInEditMode()) {
 			mContentLayoutList = new ArrayList<>();
-			for(int i = 0; i < getChildCount(); i++)
-			{
+			for (int i = 0; i < getChildCount(); i++) {
 				mContentLayoutList.add(getChildAt(i));
 			}
 

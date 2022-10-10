@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -52,6 +53,7 @@ import com.unity3d.player.UnityPlayerActivity.plugins.VideoEnabledWebView;
 
 import com.unity3d.player.UnityPlayerActivity.view.ScrollWebView;
 import com.unity3d.player.UnityPlayerActivity.listener.WebViewOnScrollListener;
+import com.unity3d.player.UnityPlayerActivity.activity.SplashActivity;
 
 public class MainFragment extends TaskFragment implements SwipeRefreshLayout.OnRefreshListener, AdvancedWebView.Listener {
 	private static final String ARGUMENT_URL = "url";
@@ -154,7 +156,7 @@ public class MainFragment extends TaskFragment implements SwipeRefreshLayout.OnR
 	public void onResume() {
 		super.onResume();
 		mWebView.onResume();
-        
+
 	}
 
 
@@ -437,38 +439,48 @@ public class MainFragment extends TaskFragment implements SwipeRefreshLayout.OnR
 
 
 	private void bindData() {
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.setAcceptThirdPartyCookies(mWebView, true);
+        }
 		// webview settings
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.getSettings().setAppCacheEnabled(true);
-		mWebView.getSettings().setAppCachePath(getActivity().getCacheDir().getAbsolutePath());
-		mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        if (WebViewAppConfig.CACHE_DISABLE) {
+            mWebView.getSettings().setAppCacheEnabled(false);
+            mWebView.getSettings().setAppCachePath(null);
+            mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        } else {
+            mWebView.getSettings().setAppCacheEnabled(true);
+            mWebView.getSettings().setAppCachePath(getActivity().getCacheDir().getAbsolutePath());
+            mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        }
+
 		mWebView.getSettings().setDomStorageEnabled(true);
 		mWebView.getSettings().setDatabaseEnabled(true);
 		mWebView.getSettings().setGeolocationEnabled(true);
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.getSettings().setBuiltInZoomControls(false);
-        String customUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/100.0.4896.77 Mobile/15E148 Safari/604.1";
+
+        String customUserAgent = WebViewAppConfig.USER_AGENT;
         mWebView.getSettings().setUserAgentString(customUserAgent);
+        if (!WebViewAppConfig.USER_AGENT.isEmpty()) {
+            mWebView.getSettings().setUserAgentString(mWebView.getSettings().getUserAgentString());
+        }
 
 		// advanced webview settings
 		mWebView.setListener(getActivity(), this);
-        
+
 		mWebView.setGeolocationEnabled(true);
-        
-        //Add custom HTTP headers in addition to the ones sent by the web browser implementation
-//        mWebView.addHttpHeader("X-Requested-With", WebViewAppConfig.HTTP_HEADER);
-        
+
         // disable third-party cookies only
         mWebView.setThirdPartyCookiesEnabled(true);
-        
+
         // or disable cookies in general
         mWebView.setCookiesEnabled(true);
-        
+
         //Allow or disallow (both passive and active) mixed content (HTTP content being loaded inside HTTPS sites)
         mWebView.setMixedContentAllowed(true);
-        
-        //Switch between mobile and desktop mode
-//        mWebView.setDesktopMode(true);
 
 		// webview style
 		mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY); // fixes scrollbar on Froyo
@@ -690,7 +702,7 @@ public class MainFragment extends TaskFragment implements SwipeRefreshLayout.OnR
                         if (getActivity() != null && mSuccess) {
                             showContent(500); // hide progress bar with delay to show webview content smoothly
                             showProgress(false);
-                            
+
                             if (WebViewAppConfig.ACTION_BAR_HTML_TITLE) {
                                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(view.getTitle());
                             }

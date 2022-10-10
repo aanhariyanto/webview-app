@@ -29,8 +29,7 @@ import com.unity3d.player.UnityPlayerActivity.listener.LoadUrlListener;
 import com.unity3d.player.UnityPlayerActivity.utility.IntentUtility;
 import com.unity3d.player.UnityPlayerActivity.utility.Preferences;
 
-public class MainActivity extends AppCompatActivity implements LoadUrlListener, DrawerStateListener
-{
+public class MainActivity extends AppCompatActivity implements LoadUrlListener, DrawerStateListener {
 	public static final String EXTRA_URL = "url";
 
 	// prevent phone from sleeping
@@ -42,16 +41,14 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 	private String mUrl;
 
 
-	public static Intent newIntent(Context context)
-	{
+	public static Intent newIntent(Context context) {
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
 	}
 
 
-	public static Intent newIntent(Context context, String url)
-	{
+	public static Intent newIntent(Context context, String url) {
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra(EXTRA_URL, url);
@@ -60,20 +57,21 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		// prevent phone from sleeping
-		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-		this.mWakeLock.acquire();
+
+        if (WebViewAppConfig.PREVENT_SLEEP) {
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+            this.mWakeLock.acquire();
+        } else {
+
+        }
 
 		// handle intent extras
 		Bundle extras = getIntent().getExtras();
-		if(extras != null)
-		{
+		if (extras != null) {
 			handleExtras(extras);
 		}
 
@@ -90,36 +88,31 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 
 
 	@Override
-	public void onStart()
-	{
+	public void onStart() {
 		super.onStart();
     }
 
 
 	@Override
-	public void onResume()
-	{
+	public void onResume() {
 		super.onResume();
 	}
 
 
 	@Override
-	public void onPause()
-	{
+	public void onPause() {
 		super.onPause();
 	}
 
 
 	@Override
-	public void onStop()
-	{
+	public void onStop() {
 		super.onStop();
     }
 
 
 	@Override
-	public void onDestroy()
-	{
+	public void onDestroy() {
 		// prevent phone from sleeping
 		this.mWakeLock.release();
 		super.onDestroy();
@@ -127,39 +120,33 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent)
-	{
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		// forward activity result to fragment
 		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_drawer_content);
-		if(fragment != null)
-		{
+		if (fragment != null) {
 			fragment.onActivityResult(requestCode, resultCode, intent);
 		}
 	}
 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		// action bar menu
 		return super.onCreateOptionsMenu(menu);
 	}
 
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		// open or close the drawer if home button is pressed
-		if(mDrawerToggle.onOptionsItemSelected(item))
-		{
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 
 		// action bar menu behavior
-		switch(item.getItemId())
-		{
+		switch (item.getItemId()) {
 			case android.R.id.home:
 				Intent intent = MainActivity.newIntent(this);
 				startActivity(intent);
@@ -172,46 +159,36 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState)
-	{
+	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		mDrawerToggle.syncState();
 	}
 
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfiguration)
-	{
+	public void onConfigurationChanged(Configuration newConfiguration) {
 		super.onConfigurationChanged(newConfiguration);
 		mDrawerToggle.onConfigurationChanged(newConfiguration);
 	}
 
 
 	@Override
-	public void onBackPressed()
-	{
-		if(isDrawerOpen())
-		{
+	public void onBackPressed() {
+		if (isDrawerOpen()) {
 			mDrawerLayout.closeDrawer(Gravity.LEFT);
-		}
-		else
-		{
-			if(WebViewAppConfig.EXIT_CONFIRMATION)
-			{
+		} else {
+			if (WebViewAppConfig.EXIT_CONFIRMATION) {
 				Snackbar
-						.make(findViewById(R.id.activity_main_coordinator_layout), R.string.activity_main_exit_snackbar, Snackbar.LENGTH_LONG)
-						.setAction(R.string.activity_main_exit_confirm, new View.OnClickListener()
-						{
-							@Override
-							public void onClick(View view)
-							{
-								MainActivity.super.onBackPressed();
-							}
-						})
-						.show();
-			}
-			else
-			{
+                    .make(findViewById(R.id.activity_main_coordinator_layout), R.string.activity_main_exit_snackbar, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.activity_main_exit_confirm, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view) {
+                            MainActivity.super.onBackPressed();
+                        }
+                    })
+                    .show();
+			} else {
 				super.onBackPressed();
 			}
 		}
@@ -219,28 +196,23 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 
 
 	@Override
-	public void onLoadUrl(String url)
-	{
-		
+	public void onLoadUrl(String url) {
+
 	}
 
-
 	@Override
-	public boolean isDrawerOpen()
-	{
+	public boolean isDrawerOpen() {
 		return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
 	}
 
 
 	@Override
-	public void onBackButtonPressed()
-	{
+	public void onBackButtonPressed() {
 		onBackPressed();
 	}
 
 
-	private void setupActionBar()
-	{
+	private void setupActionBar() {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
@@ -250,12 +222,11 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 		bar.setDisplayShowHomeEnabled(true);
 		bar.setDisplayHomeAsUpEnabled(WebViewAppConfig.NAVIGATION_DRAWER);
 		bar.setHomeButtonEnabled(WebViewAppConfig.NAVIGATION_DRAWER);
-		if(!WebViewAppConfig.ACTION_BAR) bar.hide();
+		if (!WebViewAppConfig.ACTION_BAR) bar.hide();
 	}
 
 
-	private void setupDrawer(Bundle savedInstanceState)
-	{
+	private void setupDrawer(Bundle savedInstanceState) {
 		// reference
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
 		mNavigationView = (NavigationView) findViewById(R.id.activity_main_drawer_navigation);
@@ -264,65 +235,55 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 		MenuItem firstItem = setupMenu(mNavigationView.getMenu());
 
 		// menu icon tint
-		if(!WebViewAppConfig.NAVIGATION_DRAWER_ICON_TINT)
-		{
+		if (!WebViewAppConfig.NAVIGATION_DRAWER_ICON_TINT) {
 			mNavigationView.setItemIconTintList(null);
 		}
 
 		// navigation listener
 		mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
-		{
-			@Override
-			public boolean onNavigationItemSelected(MenuItem item)
-			{
+            {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem item) {
 
-				// select drawer item
-				selectDrawerItem(item);
-				return true;
-			}
-		});
+                    // select drawer item
+                    selectDrawerItem(item);
+                    return true;
+                }
+            });
 
 		// drawer toggle
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close)
 		{
 			@Override
-			public void onDrawerClosed(View view)
-			{
+			public void onDrawerClosed(View view) {
 				supportInvalidateOptionsMenu();
 			}
 
 
 			@Override
-			public void onDrawerOpened(View drawerView)
-			{
+			public void onDrawerOpened(View drawerView) {
 				supportInvalidateOptionsMenu();
 			}
 		};
 		mDrawerLayout.addDrawerListener(mDrawerToggle);
 
 		// disable navigation drawer
-		if(!WebViewAppConfig.NAVIGATION_DRAWER)
-		{
+		if (!WebViewAppConfig.NAVIGATION_DRAWER) {
 			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.LEFT);
 		}
 
 		// show initial fragment
-		if(savedInstanceState == null)
-		{
-			if(mUrl == null)
-			{
+		if (savedInstanceState == null) {
+			if (mUrl == null) {
 				selectDrawerItem(firstItem);
-			}
-			else
-			{
+			} else {
 				selectDrawerItem(mUrl);
 			}
 		}
 	}
 
 
-	private MenuItem setupMenu(Menu menu)
-	{
+	private MenuItem setupMenu(Menu menu) {
 		// title list
 		String[] titles = getResources().getStringArray(R.array.navigation_title_list);
 
@@ -332,8 +293,7 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 		// icon list
 		TypedArray iconTypedArray = getResources().obtainTypedArray(R.array.navigation_icon_list);
 		Integer[] icons = new Integer[iconTypedArray.length()];
-		for(int i = 0; i < iconTypedArray.length(); i++)
-		{
+		for (int i = 0; i < iconTypedArray.length(); i++) {
 			icons[i] = iconTypedArray.getResourceId(i, -1);
 		}
 		iconTypedArray.recycle();
@@ -344,19 +304,15 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 		// add menu items
 		Menu parent = menu;
 		MenuItem firstItem = null;
-		for(int i = 0; i < titles.length; i++)
-		{
-			if(urls[i].equals(""))
-			{
+		for (int i = 0; i < titles.length; i++) {
+			if (urls[i].equals("")) {
 				// category
 				parent = menu.addSubMenu(Menu.NONE, i, i, titles[i]);
-			}
-			else
-			{
+			} else {
 				// item
 				MenuItem item = parent.add(Menu.NONE, i, i, titles[i]);
-				if(icons[i] != -1) item.setIcon(icons[i]);
-				if(firstItem == null) firstItem = item;
+				if (icons[i] != -1) item.setIcon(icons[i]);
+				if (firstItem == null) firstItem = item;
 			}
 		}
 
@@ -364,15 +320,14 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 	}
 
 
-	private void selectDrawerItem(MenuItem item)
-	{
+	private void selectDrawerItem(MenuItem item) {
 		int position = item.getItemId();
 
 		String[] urlList = getResources().getStringArray(R.array.navigation_url_list);
 		String[] shareList = getResources().getStringArray(R.array.navigation_share_list);
 
 		String url = urlList[position];
-		if(IntentUtility.startIntentActivity(this, url)) return; // check for intent url
+		if (IntentUtility.startIntentActivity(this, url)) return; // check for intent url
 
 		Fragment fragment = MainFragment.newInstance(url, shareList[position]);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -385,9 +340,8 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 	}
 
 
-	private void selectDrawerItem(String url)
-	{
-		if(IntentUtility.startIntentActivity(this, url)) return; // check for intent url
+	private void selectDrawerItem(String url) {
+		if (IntentUtility.startIntentActivity(this, url)) return; // check for intent url
 
 		Fragment fragment = MainFragment.newInstance(url, "");
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -399,46 +353,39 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 	}
 
 
-	private void handleExtras(Bundle extras)
-	{
-		if(extras.containsKey(EXTRA_URL))
-		{
+	private void handleExtras(Bundle extras) {
+		if (extras.containsKey(EXTRA_URL)) {
 			mUrl = extras.getString(EXTRA_URL);
 		}
 	}
 
 
-	private void bindData()
-	{
+	private void bindData() {
 		// reference
 		NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_drawer_navigation);
 
 		// inflate navigation header
-		if(navigationView.getHeaderView(0) == null)
-		{
+		if (navigationView.getHeaderView(0) == null) {
 			View headerView = getLayoutInflater().inflate(R.layout.navigation_header, navigationView, false);
 			navigationView.addHeaderView(headerView);
 		}
 
 		// navigation header content
-		if(navigationView.getHeaderView(0) != null)
-		{
+		if (navigationView.getHeaderView(0) != null) {
 			// reference
 			View headerView = navigationView.getHeaderView(0);
 
 			// header background
-			if(WebViewAppConfig.NAVIGATION_DRAWER_HEADER_IMAGE)
-			{
+			if (WebViewAppConfig.NAVIGATION_DRAWER_HEADER_IMAGE) {
 				headerView.setBackgroundResource(R.drawable.navigation_header_bg);
 			}
 		}
 	}
 
 
-	private void checkRateCounter()
-	{
+	private void checkRateCounter() {
 		// check if rate prompt is disabled
-		if(WebViewAppConfig.RATE_APP_PROMPT_FREQUENCY == 0) return;
+		if (WebViewAppConfig.RATE_APP_PROMPT_FREQUENCY == 0) return;
 
 		// get current rate counter
 		final Preferences preferences = new Preferences();
@@ -447,33 +394,27 @@ public class MainActivity extends AppCompatActivity implements LoadUrlListener, 
 
 		// check rate counter
 		boolean showMessage = false;
-		if(rateCounter != -1)
-		{
-			if(rateCounter >= WebViewAppConfig.RATE_APP_PROMPT_FREQUENCY && rateCounter % WebViewAppConfig.RATE_APP_PROMPT_FREQUENCY == 0)
-			{
+		if (rateCounter != -1) {
+			if (rateCounter >= WebViewAppConfig.RATE_APP_PROMPT_FREQUENCY && rateCounter % WebViewAppConfig.RATE_APP_PROMPT_FREQUENCY == 0) {
 				showMessage = true;
 			}
-		}
-		else
-		{
+		} else {
 			return;
 		}
 
 		// show rate message
-		if(showMessage)
-		{
+		if (showMessage) {
 			Snackbar
-					.make(findViewById(R.id.activity_main_coordinator_layout), R.string.activity_main_rate_snackbar, WebViewAppConfig.RATE_APP_PROMPT_DURATION)
-					.setAction(R.string.activity_main_rate_confirm, new View.OnClickListener()
-					{
-						@Override
-						public void onClick(View view)
-						{
-							IntentUtility.startStoreActivity(MainActivity.this);
-							preferences.setRateCounter(-1);
-						}
-					})
-					.show();
+                .make(findViewById(R.id.activity_main_coordinator_layout), R.string.activity_main_rate_snackbar, WebViewAppConfig.RATE_APP_PROMPT_DURATION)
+                .setAction(R.string.activity_main_rate_confirm, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view) {
+                        IntentUtility.startStoreActivity(MainActivity.this);
+                        preferences.setRateCounter(-1);
+                    }
+                })
+                .show();
 		}
 
 		// increment rate counter

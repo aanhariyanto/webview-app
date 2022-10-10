@@ -3,35 +3,28 @@ package com.unity3d.player.UnityPlayerActivity;
 import android.app.Application;
 import android.content.Context;
 
-public class WebViewAppApplication extends Application
-{
+public class WebViewAppApplication extends Application {
 	private static WebViewAppApplication sInstance;
 
-	public WebViewAppApplication()
-	{
+	public WebViewAppApplication() {
 		sInstance = this;
 	}
 
 
-	public static Context getContext()
-	{
+	public static Context getContext() {
 		return sInstance;
 	}
 
 
 	@Override
-	public void onCreate()
-	{
+	public void onCreate() {
 		super.onCreate();
 
 		// force AsyncTask to be initialized in the main thread due to the bug:
 		// http://stackoverflow.com/questions/4280330/onpostexecute-not-being-called-in-asynctask-handler-runtime-exception
-		try
-		{
+		try {
 			Class.forName("android.os.AsyncTask");
-		}
-		catch(ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
     }

@@ -25,13 +25,13 @@
 	-->
 	<string-array name="navigation_url_list">
 		<item></item>
-		<item>file:///android_asset/www/home.html</item>
-		<item>file:///android_asset/www/products.html</item>
-		<item>file:///android_asset/www/references.html</item>
-		<item>file:///android_asset/www/support.html</item>
+		<item>https://drakorkita.in</item>
+		<item>file:///android_asset/local-html/products.html</item>
+		<item>file:///android_asset/local-html/references.html</item>
+		<item>file:///android_asset/local-html/support.html</item>
 		<item></item>
-		<item>file:///android_asset/www/about.html</item>
-		<item>file:///android_asset/www/contact.html</item>
+		<item>file:///android_asset/local-html/about.html</item>
+		<item>file:///android_asset/local-html/contact.html</item>
 	</string-array>
 
 	<!-- List of icons in navigation drawer menu -->

@@ -2,11 +2,18 @@ package com.unity3d.player.UnityPlayerActivity;
 
 
 public class WebViewAppConfig {
-    // custom HTTP headers in addition to the ones sent by the web browser implementation
-//    public static final String HTTP_HEADER = "googleweblight";
+
+    //Set to "true" to prevent the device from going into sleep while the app is active
+    public static final boolean PREVENT_SLEEP = true;
 
     // splashscreen time out
     public static final int SPLASH_SCREEN_TIME_OUT = 1000;
+
+    // Set to "true" to clear the WebView cache on each app startup and do not use cached versions of your web app/website
+    public static final boolean CACHE_DISABLE = true;
+
+    // Set a customized UserAgent for WebView URL requests (or leave it empty to use the default Android UserAgent)
+    public static final String USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/100.0.4896.77 Mobile/15E148 Safari/604.1";
 
 	// true for showing action bar
 	public static final boolean ACTION_BAR = false;
@@ -28,7 +35,7 @@ public class WebViewAppConfig {
 	public static final boolean NAVIGATION_DRAWER_ICON_TINT = false;
 
 	// true for enabling pull-to-refresh gesture
-	public static final boolean PULL_TO_REFRESH = false;
+	public static final boolean PULL_TO_REFRESH = true;
 
 	// true for enabling exit confirmation when back button is pressed
 	public static final boolean EXIT_CONFIRMATION = true;

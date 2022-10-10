@@ -7,34 +7,29 @@ import android.preference.PreferenceManager;
 import com.unity3d.player.UnityPlayerActivity.WebViewAppApplication;
 
 
-public class Preferences
-{
+public class Preferences {
 	private Context mContext;
 	private SharedPreferences mSharedPreferences;
 
 
-	public Preferences()
-	{
+	public Preferences() {
 		mContext = WebViewAppApplication.getContext();
 		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 
 
-	public void clearPreferences()
-	{
+	public void clearPreferences() {
 		mSharedPreferences.edit().clear().apply();
 	}
 
 
-	public int getRateCounter()
-	{
+	public int getRateCounter() {
 		String key = mContext.getString(com.unity3d.player.UnityPlayerActivity.R.string.prefs_key_rate_counter);
 		return mSharedPreferences.getInt(key, 0);
 	}
 
 
-	public void setRateCounter(int rateCounter)
-	{
+	public void setRateCounter(int rateCounter) {
 		String key = mContext.getString(com.unity3d.player.UnityPlayerActivity.R.string.prefs_key_rate_counter);
 		mSharedPreferences.edit().putInt(key, rateCounter).apply();
 	}
